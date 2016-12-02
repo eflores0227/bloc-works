@@ -1,0 +1,7 @@
+source 'https://rubygems.org'
+
+gem 'rack', '~> 1.6'
+gem 'rake', '~> 10.0'
+
+# Specify your gem's dependencies in bloc-works.gemspec
+gemspec
