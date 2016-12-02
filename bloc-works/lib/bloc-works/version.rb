@@ -1,5 +1,4 @@
-module Bloc
-  module Works
+module BlocWorks
     VERSION = "0.1.0"
   end
 end
