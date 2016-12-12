@@ -32,14 +32,21 @@ module BlocWorks
          @rules = []
        end
 
-       def map(url, *args)
-         options = {}
-         options = args.pop if args[-1].is_a?(Hash)
-         option[:default] ||= {}
+       def resources(resource_controller)
+         map "", "#{resource_controller}#welcome"
+         map ":controller/:id/:action"
+         map "controller/:id", default: { "action" => "show" }
+         map ":controller", default: { "action" => "index" } # GET
+         map ":controller", default: { "action" => "new" } # GET
+         map ":controller/:id", default: { "action" => "edit" } # GET
+         map ":controller/:id", default: { "action" => "update" } # PUT
+         map ":controller", default: { "action" => "create" } # POST
+         map ":controller/:id", default: { "action" => "destroy" } # DELETE
+       end
 
-         destination = nil
-         destination = args.pop if args.size > 0
-         raise "Too many args!" if args.size > 0
+       def map(url, *args)
+         options = set_options(args)
+         destination = set_destination(args)
 
          parts = url.split("/")
          parts.reject! { |part| part.empty? }
@@ -59,12 +66,10 @@ module BlocWorks
            end
          end
 
-         regex = regex_parts.join("/")
-         @rules.push({ regex: Regexp.new("^/#{regex}$"),
-                       vars: vars, destination: destination,
-                       options: options })
-          end
-      end
+      regex = regex_parts.join("/")
+      @rules.push({ regex: Regexp.new("^/#{regex}$"),
+                    vars: vars, destination: destination,
+                    options: options })
 
       def look_up_url(url)
         @rules.each do |rule|
